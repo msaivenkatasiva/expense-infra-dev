@@ -201,8 +201,8 @@ resource "aws_security_group_rule" "frontend_from_vpn" {
 ###web_alb servers are accepting traffic from public
 resource "aws_security_group_rule" "web_alb_from_public" {
   type = "ingress"
-  from_port = 22
-  to_port = 22
+  from_port = 80
+  to_port = 80
   protocol = "tcp"
   cidr_blocks = ["0.0.0.0/0"]
   security_group_id = module.web_alb.sg_id

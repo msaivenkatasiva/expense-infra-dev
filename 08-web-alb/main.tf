@@ -26,7 +26,7 @@ resource "aws_lb_listener" "http" {
 
     fixed_response {
       content_type = "text/html"
-      message_body = "<h1>this is the response from web alb</h1>"
+      message_body = "<h1>this is the response from web alb from http</h1>"
       status_code  = "200"
     }
   }
@@ -46,7 +46,7 @@ resource "aws_lb_listener" "https" {
 
     fixed_response {
       content_type = "text/html"
-      message_body = "<h1>this is the response from web alb</h1>"
+      message_body = "<h1>this is the response from web alb from https</h1>"
       status_code  = "200"
     }
   }

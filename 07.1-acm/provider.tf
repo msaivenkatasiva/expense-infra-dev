@@ -32,7 +32,7 @@ terraform {
   }
   backend "s3" {
     bucket         = "devopswithmsvs"
-    key            = "expense-infra-dev-fe"
+    key            = "expense-infra-dev-acm"
     region         = "us-east-1"
     dynamodb_table = "msvs-dynamo"
   }

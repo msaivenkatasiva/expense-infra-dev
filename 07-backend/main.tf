@@ -104,10 +104,10 @@ resource "aws_launch_template" "backend" {
 resource "aws_autoscaling_group" "backend" {
   name                      = "${var.project_name}-${var.environment}-${var.common_tags.Component}"
   max_size                  = 5
-  min_size                  = 1
+  min_size                  = 2
   health_check_grace_period = 60
   health_check_type         = "ELB"
-  desired_capacity          = 1
+  desired_capacity          = 2
   target_group_arns = [aws_lb_target_group.backend.arn]
   launch_template {
     id      = aws_launch_template.backend.id
