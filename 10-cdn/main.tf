@@ -12,7 +12,7 @@ resource "aws_cloudfront_distribution" "web_cdn" {
 
   enabled             = true
 
-  aliases = ["web-${var.common_tags.Component}.${var.zone_name}"]#web-cdn.devops76.sbs
+  aliases = ["web-${var.common_tags.Component}.${var.zone_name}"] #web-cdn.devops76.sbs
 
   default_cache_behavior {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]

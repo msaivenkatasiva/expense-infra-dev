@@ -12,6 +12,7 @@ terraform {
     key            = "expense-infra-dev-vpc"
     region         = "us-east-1"
     dynamodb_table = "msvs-dynamo"
+    use_lockfile  = true
   }
 }
 

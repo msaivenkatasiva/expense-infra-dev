@@ -1,5 +1,5 @@
 resource "aws_acm_certificate" "expense" {
-  domain_name       = "devops76.sbs"
+  domain_name       = "*.devops76.sbs"
   validation_method = "DNS"
 
   tags = merge(
