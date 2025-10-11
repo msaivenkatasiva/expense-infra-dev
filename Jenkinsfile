@@ -1,0 +1,42 @@
+pipeline {
+    agent {
+        label 'AGENT-1'
+    }
+    options {
+        timeout(time: 30, unit: 'MINUTES')
+        disableConcurrentBuilds()
+    }
+    
+    stages {
+        stage('init') {
+            steps {
+                sh """
+                    cd 01-vpc
+                    terraform init -reconfigure
+                """
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'echo this is test'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'echo this is deploy'
+            }
+        }
+        
+    }
+    post {
+        always {
+            echo 'I Will run always'
+        }
+        success {
+            echo 'I will run only when code is success'
+        }
+        failure {
+            echo 'i will run when there is failure'
+        }
+    }
+}
