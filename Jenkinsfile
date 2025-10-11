@@ -7,6 +7,9 @@ pipeline {
         disableConcurrentBuilds()
         ansiColor('xterm')
     }
+    parameters {
+        choice(name: 'action', choices:['Apply','Destroy'], description: 'pick something')
+    }
     
     stages {
         stage('init') {
@@ -17,14 +20,47 @@ pipeline {
                 """
             }
         }
-        stage('Test') {
+        stage('plan') {
+            when {
+                expression {
+                    params.action == 'Apply'
+                }
+            }
             steps {
-                sh 'echo this is test'
+                sh """
+                cd 01-vpc
+                terraform plan
+                """
             }
         }
         stage('Deploy') {
+            when {
+                expression {
+                    params.action == 'Apply'
+                }
+            }
+            input {
+                message "Should we continue?"
+                ok "Yes, we should"
+            }
             steps {
-                sh 'echo this is deploy'
+                sh """
+                cd 01-vpc
+                terraform apply -auto-approve
+                """
+            }
+        }
+        stage('Destroy') {
+            when {
+                expression {
+                    params.action == 'Destroy'
+                }
+            }
+            steps {
+                sh """
+                cd 01-vpc
+                terraform destroy -auto-approve
+                """
             }
         }
         
@@ -35,10 +71,10 @@ pipeline {
             deleteDir()
         }
         success {
-            echo 'I will run only when code is success'
+            echo 'I will run when pipeline is success'
         }
         failure {
-            echo 'i will run when there is failure'
+            echo 'i will run when pipeline is failure'
         }
     }
 }
