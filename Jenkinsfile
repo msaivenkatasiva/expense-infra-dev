@@ -32,6 +32,7 @@ pipeline {
     post {
         always {
             echo 'I Will run always'
+            deleteDir()
         }
         success {
             echo 'I will run only when code is success'
