@@ -40,3 +40,21 @@ resource "aws_ssm_parameter" "vpn_sg_id"{
     type = "String"
     value = module.vpn.sg_id
 }
+
+resource "aws_ssm_parameter" "jenkins_tf_sg_id"{
+    name = "/${var.project_name}/${var.environment}/jenkins_tf_sg_id"
+    type = "String"
+    value = module.jenkins_tf.sg_id
+}
+
+resource "aws_ssm_parameter" "jenkins-agent_sg_id"{
+    name = "/${var.project_name}/${var.environment}/jenkins_agent_sg_id"
+    type = "String"
+    value = module.jenkins_agent.sg_id
+}
+
+resource "aws_ssm_parameter" "nexus_sg_id"{
+    name = "/${var.project_name}/${var.environment}/nexus_sg_id"
+    type = "String"
+    value = module.nexus.sg_id
+}

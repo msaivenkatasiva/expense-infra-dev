@@ -76,6 +76,35 @@ module "vpn" {
     ingress_rules = var.vpn_sg_rules
 }
 
+module "jenkins_tf" {
+    source = "../../terraform-aws-security_group"
+    project_name = var.project_name
+    environment = var.environment
+    sg_description = "SG for jenkins Instances"
+    vpc_id = data.aws_ssm_parameter.vpc_id.value
+    common_tags = var.common_tags
+    sg_name = "jenkins_tf"
+}
+
+module "jenkins_agent" {
+    source = "../../terraform-aws-security_group"
+    project_name = var.project_name
+    environment = var.environment
+    sg_description = "SG for jenkins-agent Instances"
+    vpc_id = data.aws_ssm_parameter.vpc_id.value
+    common_tags = var.common_tags
+    sg_name = "jenkins_agent"
+}
+
+module "nexus" {
+    source = "../../terraform-aws-security_group"
+    project_name = var.project_name
+    environment = var.environment
+    sg_description = "SG for nexus Instances"
+    vpc_id = data.aws_ssm_parameter.vpc_id.value
+    common_tags = var.common_tags
+    sg_name = "nexus"
+}
 
 ###DB servers are accepting traffic from backend servers
 resource "aws_security_group_rule" "db_from_backend" {
@@ -248,6 +277,57 @@ resource "aws_security_group_rule" "frontend_default_vpc" {
   security_group_id = module.frontend.sg_id
 }
 
+resource "aws_security_group_rule" "jenkins_tf_public" {
+  type              = "ingress"
+  from_port         = 8080
+  to_port           = 8080
+  protocol          = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+  security_group_id = module.jenkins_tf.sg_id
+}
+
+resource "aws_security_group_rule" "jenkins_tf_ssh" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+  security_group_id = module.jenkins_tf.sg_id
+}
+resource "aws_security_group_rule" "jenkins_agent_public" {
+  type              = "ingress"
+  from_port         = 8080
+  to_port           = 8080
+  protocol          = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+  security_group_id = module.jenkins_agent.sg_id
+}
+
+resource "aws_security_group_rule" "jenkins_agent_ssh" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+  security_group_id = module.jenkins_agent.sg_id
+}
+resource "aws_security_group_rule" "nexus_public" {
+  type              = "ingress"
+  from_port         = 8081
+  to_port           = 8081
+  protocol          = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+  security_group_id = module.nexus.sg_id
+}
+
+resource "aws_security_group_rule" "nexus_ssh" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+  security_group_id = module.nexus.sg_id
+}
 
 
 # note: As we've created SGs and created ingressrules which traffic have to be allowed to related server.Now right after creating the SGs, update those in the parameter store. So, those'd be used by the team who gonna create servers using these SG IDs.
