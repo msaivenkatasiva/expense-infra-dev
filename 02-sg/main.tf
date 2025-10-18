@@ -329,5 +329,32 @@ resource "aws_security_group_rule" "nexus_ssh" {
   security_group_id = module.nexus.sg_id
 }
 
+resource "aws_security_group_rule" "backend_from_jenkins_agent" {
+  type                     = "ingress"
+  from_port                = 22
+  to_port                  = 22
+  protocol                 = "tcp"
+  source_security_group_id = module.jenkins_agent.sg_id
+  security_group_id        = module.backend.sg_id
+}
+
+resource "aws_security_group_rule" "frontend_from_jenkins_agent" {
+  type                     = "ingress"
+  from_port                = 22
+  to_port                  = 22
+  protocol                 = "tcp"
+  source_security_group_id = module.jenkins_agent.sg_id
+  security_group_id        = module.frontend.sg_id
+}
+
+resource "aws_security_group_rule" "nexus_from_jenkins_agent" {
+  type                     = "ingress"
+  from_port                = 22
+  to_port                  = 22
+  protocol                 = "tcp"
+  source_security_group_id = module.jenkins_agent.sg_id
+  security_group_id        = module.nexus.sg_id
+}
+
 
 # note: As we've created SGs and created ingressrules which traffic have to be allowed to related server.Now right after creating the SGs, update those in the parameter store. So, those'd be used by the team who gonna create servers using these SG IDs.
